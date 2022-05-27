@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:todo/src/dependency_injection.dart';
 
-void main() {
-  runApp(App());
+import 'src/app.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dependencyInjection();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(App());
+  });
 }
 
-class App extends StatelessWidget {
+class App1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(title: 'To-Do-List', home: TodoList());
@@ -36,6 +45,16 @@ class _TodoListState extends State<TodoList> {
   }
 
   void _addTodoItem(String title) {
+    //Wrapping it inside a set state will notify
+    // the app that the state has changed
+
+    setState(() {
+      _todoList.add(title);
+    });
+    _textFieldController.clear();
+  }
+
+  void _deleteTodoItem(String title) {
     //Wrapping it inside a set state will notify
     // the app that the state has changed
 
